@@ -21,4 +21,10 @@ public class SignupRequest {
     private Integer batchYear;
 
     private String invitationKey;
+
+    private String companyName;
+
+    private String website;
+
+    private String location;
 }

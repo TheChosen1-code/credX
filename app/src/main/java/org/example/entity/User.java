@@ -1,7 +1,11 @@
 package org.example.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.example.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 
 @Entity
@@ -21,6 +25,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false)
@@ -33,7 +38,19 @@ public class User {
 
     private Integer batchYear;
 
+    private String companyName;
+
+    private String website;
+
+    private String location;
+
+    private String resumeUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "company")
+    @JsonIgnore
+    private List<JobPosting> jobPostings;
 }

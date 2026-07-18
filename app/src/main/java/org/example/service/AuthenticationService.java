@@ -75,6 +75,9 @@ public class AuthenticationService {
                 .branch(request.getBranch())
                 .batchYear(request.getBatchYear())
                 .role(assignedRole)
+                .companyName(request.getCompanyName())
+                .website(request.getWebsite())
+                .location(request.getLocation())
                 .build();
 
         userRepository.save(user);
