@@ -40,6 +40,8 @@ public class JobPosting {
 
     private LocalDateTime createdAt;
 
+    private String skills;
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     private User company;

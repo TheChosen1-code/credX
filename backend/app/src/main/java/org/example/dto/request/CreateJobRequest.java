@@ -22,6 +22,9 @@ public class CreateJobRequest {
     private String location;
 
     @NotBlank
+    private String skills;
+    
+    @NotBlank
     private String packageOffered;
 
     @NotNull

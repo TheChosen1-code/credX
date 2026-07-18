@@ -42,6 +42,7 @@ public class JobService {
                 .status(JobStatus.PENDING)
                 .createdAt(LocalDateTime.now())
                 .company(company)
+                .skills(request.getSkills())
                 .build();
 
         JobPosting savedJob = jobPostingRepository.save(jobPosting);
@@ -55,9 +56,11 @@ public class JobService {
                 .minimumCgpa(savedJob.getMinimumCgpa())
                 .applicationDeadline(savedJob.getApplicationDeadline())
                 .status(savedJob.getStatus())
+                .skills(savedJob.getSkills())
                 .createdAt(savedJob.getCreatedAt())
                 .companyName(savedJob.getCompany().getCompanyName())
                 .website(savedJob.getCompany().getWebsite())
+
                 .build();
     }
 }

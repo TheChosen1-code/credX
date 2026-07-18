@@ -24,6 +24,8 @@ public class JobResponse {
 
     private Double minimumCgpa;
 
+    private String skills;
+
     private LocalDate applicationDeadline;
 
     private JobStatus status;
