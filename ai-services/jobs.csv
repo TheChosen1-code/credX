@@ -1,0 +1,35 @@
+company,job_title,skills,branches,cgpa,max_backlogs,job_description
+Google,Software Engineer Intern,"Python,Java,Data Structures,Algorithms","CSE,IT",8,0,Build scalable backend services for Google Search infrastructure
+Microsoft,Cloud Engineer,"Azure,C#,.NET,Kubernetes","CSE,IT,ECE",7.5,0,Design and deploy cloud native applications on Microsoft Azure
+Amazon,SDE Intern,"Java,AWS,System Design,DSA","CSE,IT",7.5,1,Develop high scale distributed systems for Amazon retail platform
+Adobe,Frontend Developer,"React,JavaScript,CSS,HTML","CSE,IT",7,1,Create rich interactive user interfaces for Adobe Creative Cloud
+Oracle,Database Engineer,"SQL,PL/SQL,Oracle DB,Java","CSE,IT,ECE",7,1,Maintain and optimize enterprise database systems
+Deloitte,Data Analyst,"Excel,SQL,Power BI,Python","CSE,IT,ECE,MECH",6.5,1,Analyze business data to generate actionable client insights
+TCS,Software Developer,"Java,Spring Boot,SQL,REST API","CSE,IT,ECE,EEE",6.5,1,Develop enterprise software solutions for global clients
+Infosys,Full Stack Developer,"React,Node.js,MongoDB,Express","CSE,IT",6.5,1,Build end to end web applications for banking domain clients
+Accenture,QA Engineer,"Selenium,Java,Manual Testing,Automation","CSE,IT,ECE",6.5,1,Perform automated and manual testing for enterprise applications
+IBM,Cloud DevOps Engineer,"Docker,Kubernetes,Jenkins,AWS","CSE,IT",7,0,Automate CI/CD pipelines and manage cloud infrastructure
+Flipkart,Backend Developer,"Java,Spring Boot,Microservices,Kafka","CSE,IT",7.5,0,Build scalable microservices for Flipkart e-commerce platform
+Paytm,Android Developer,"Kotlin,Java,Android SDK,MVVM","CSE,IT",7,1,Develop and maintain Paytm consumer Android application
+PhonePe,Backend Engineer,"Java,Go,MySQL,Redis","CSE,IT",7.5,0,Build high throughput payment processing backend systems
+Swiggy,Data Scientist Intern,"Python,Machine Learning,Pandas,SQL","CSE,IT,ECE",7.5,0,Build demand forecasting models for food delivery logistics
+Zomato,Frontend Engineer,"React,TypeScript,Redux,CSS","CSE,IT",7,1,Develop customer facing web features for Zomato platform
+Razorpay,Security Engineer,"Cyber Security,Network Security,Python,Linux","CSE,IT,ECE",7.5,0,Secure payment gateway infrastructure against threats
+SAP,Software Engineer,"Java,ABAP,SQL,Cloud Computing","CSE,IT",7,1,Develop enterprise resource planning software modules
+Cisco,Network Engineer,"Networking,CCNA,Python,Cyber Security","ECE,EEE,CSE",6.5,1,Design and maintain enterprise networking solutions
+Intel,Embedded Systems Engineer,"C,C++,Embedded C,RTOS","ECE,EEE",7,0,Develop firmware for next generation processor chipsets
+Nvidia,AI/ML Engineer,"Python,PyTorch,Deep Learning,CUDA","CSE,IT,ECE",8,0,Build and optimize deep learning models for GPU acceleration
+Nvidia,Computer Vision Intern,"Python,OpenCV,TensorFlow,Deep Learning","CSE,IT",7.5,0,Develop computer vision models for autonomous systems
+Google,Data Science Intern,"Python,Machine Learning,Statistics,SQL","CSE,IT,ECE",8,0,Analyze large scale datasets to improve product recommendations
+Microsoft,AI Research Intern,"Python,Machine Learning,NLP,PyTorch","CSE,IT",8.5,0,Research and prototype natural language processing models
+Amazon,Cloud Support Engineer,"AWS,Linux,Python,Troubleshooting","CSE,IT,ECE",6.5,1,Provide technical support for AWS cloud customers
+Adobe,Data Analyst Intern,"SQL,Python,Tableau,Statistics","CSE,IT,MECH",6.5,1,Generate insights from user behavior data across products
+Oracle,Cloud Engineer,"OCI,Linux,Python,Networking","CSE,IT,ECE",7,1,Manage and scale Oracle cloud infrastructure services
+Deloitte,Cyber Security Analyst,"Cyber Security,Ethical Hacking,Networking,Python","CSE,IT,ECE",7,0,Assess and mitigate security risks for enterprise clients
+Infosys,DevOps Engineer,"Docker,Jenkins,AWS,Linux","CSE,IT",6.5,1,Build automated deployment pipelines for client projects
+IBM,Data Engineer,"Python,SQL,Spark,ETL","CSE,IT,ECE",7,0,Design and build data pipelines for enterprise analytics
+Flipkart,Data Scientist,"Python,Machine Learning,SQL,Statistics","CSE,IT",8,0,Build recommendation systems for Flipkart marketplace
+Paytm,Backend Developer,"Java,Spring Boot,MySQL,Microservices","CSE,IT",7,1,Develop scalable backend services for digital payments
+Swiggy,Full Stack Developer,"React,Node.js,MongoDB,JavaScript","CSE,IT",7,1,Build features across Swiggy web and mobile platforms
+Razorpay,Software Engineer,"Java,Go,SQL,System Design","CSE,IT",7.5,0,Build core payment infrastructure and merchant tools
+SAP,Data Analyst,"SQL,Python,Power BI,Excel","CSE,IT,MECH",6.5,1,Analyze enterprise data to support SAP client decision making

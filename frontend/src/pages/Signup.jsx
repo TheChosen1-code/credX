@@ -180,10 +180,12 @@ export default function Signup() {
         else if (role === 'ROLE_ADMIN') navigate('/admin');
       }
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      const errMsg = err.response?.data?.message || err.message || "Something went wrong. Please try again.";
+      setError(errMsg);
     } finally {
       setSubmitting(false);
     }
+
   };
 
   return (

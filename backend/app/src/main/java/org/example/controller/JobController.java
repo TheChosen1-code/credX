@@ -8,9 +8,11 @@ import org.example.entity.JobPosting;
 import org.example.service.JobService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 @RequestMapping("/company")
@@ -24,6 +26,11 @@ public class JobController {
             @Valid @RequestBody CreateJobRequest request)
     {
         return ResponseEntity.ok(jobService.createJob(request));
+    }
+
+    @GetMapping("/jobs")
+    public ResponseEntity<List<JobPosting>> getCompanyJobs() {
+        return ResponseEntity.ok(jobService.getCompanyJobs());
     }
 
 }

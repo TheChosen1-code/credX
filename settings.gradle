@@ -12,3 +12,5 @@ plugins {
 
 rootProject.name = 'credX'
 include('app')
+project(':app').projectDir = file('backend/app')
+

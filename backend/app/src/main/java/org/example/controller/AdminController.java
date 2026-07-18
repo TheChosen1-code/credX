@@ -32,4 +32,19 @@ public class AdminController {
     {
         return ResponseEntity.ok(adminService.rejectJob(id));
     }
-}
+
+    @GetMapping("/companies")
+    public ResponseEntity<List<org.example.entity.User>> getAllCompanies() {
+        return ResponseEntity.ok(adminService.getAllCompanies());
+    }
+
+    @GetMapping("/jobs")
+    public ResponseEntity<List<JobPosting>> getAllJobs() {
+        return ResponseEntity.ok(adminService.getAllJobs());
+    }
+
+    @GetMapping("/applications")
+    public ResponseEntity<List<org.example.entity.Application>> getAllApplications() {
+        return ResponseEntity.ok(adminService.getAllApplications());
+    }
+}

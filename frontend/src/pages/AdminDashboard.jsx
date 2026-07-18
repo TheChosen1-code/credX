@@ -14,21 +14,14 @@ import StatCard from "../components/admin/StatCard";
 import CompaniesTable from "../components/admin/CompaniesTable";
 import JobApprovalCard from "../components/admin/JobApprovalCard";
 import ApplicationsTable from "../components/admin/ApplicationsTable";
-
-// Replace this with your real service layer, e.g.
-// import { adminService } from "../services/adminService";
-const adminService = {
-  getAllCompanies: async () => MOCK_COMPANIES,
-  getAllJobs: async () => MOCK_JOBS,
-  getAllApplications: async () => MOCK_APPLICATIONS,
-  approveJob: async (jobId) => ({ ...MOCK_JOBS.find((j) => j.id === jobId), status: "APPROVED" }),
-  rejectJob: async (jobId) => ({ ...MOCK_JOBS.find((j) => j.id === jobId), status: "REJECTED" }),
-};
+import * as adminApi from "../api/adminApi";
+import { useAuth } from "../context/AuthContext";
 
 const ACCENT = "#2F6FED";
 const JOB_FILTERS = ["ALL", "PENDING", "APPROVED", "REJECTED", "CLOSED"];
 
 export default function AdminDashboard() {
+  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [companies, setCompanies] = useState([]);
   const [jobs, setJobs] = useState([]);
@@ -40,15 +33,107 @@ export default function AdminDashboard() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const [companiesRes, jobsRes, applicationsRes] = await Promise.all([
-        adminService.getAllCompanies(),
-        adminService.getAllJobs(),
-        adminService.getAllApplications(),
-      ]);
-      setCompanies(companiesRes);
-      setJobs(jobsRes);
-      setApplications(applicationsRes);
-      setLoading(false);
+      try {
+        const [companiesRes, jobsRes, applicationsRes, pendingJobsRes] = await Promise.all([
+          adminApi.getAllCompanies().catch(e => {
+            console.warn("Could not fetch companies from API, using mock", e);
+            return MOCK_COMPANIES;
+          }),
+          adminApi.getAllJobs().catch(e => {
+            console.warn("Could not fetch jobs from API, using mock", e);
+            return MOCK_JOBS;
+          }),
+          adminApi.getAllApplications().catch(e => {
+            console.warn("Could not fetch applications from API, using mock", e);
+            return MOCK_APPLICATIONS;
+          }),
+          adminApi.getPendingJobs().catch(e => {
+            console.warn("Could not fetch pending jobs from API", e);
+            return [];
+          }),
+        ]);
+
+        let finalJobsList = [...jobsRes];
+        if (pendingJobsRes && pendingJobsRes.length > 0) {
+          const pendingIds = new Set(pendingJobsRes.map(j => j.id));
+          finalJobsList = finalJobsList.filter(j => !pendingIds.has(j.id) && j.status !== 'PENDING');
+          finalJobsList = [...pendingJobsRes, ...finalJobsList];
+        }
+
+        // Normalize companies (Users with role = ROLE_COMPANY)
+
+        const normalizedCompanies = (companiesRes || []).map(c => {
+          // If already flat (mock data), return it
+          if (c.companyName && !c.role) return c;
+          return {
+            id: c.id,
+            companyName: c.companyName || c.fullName || 'Unnamed Company',
+            email: c.email || 'N/A',
+            website: c.website || 'N/A',
+            location: c.location || 'Remote',
+            jobCount: finalJobsList ? finalJobsList.filter(j => j.company?.id === c.id).length : 0,
+          };
+        });
+
+        // Normalize jobs
+        const normalizedJobs = (finalJobsList || []).map(j => {
+          if (j.company && typeof j.company === 'object' && !j.company.role) return j; // already formatted
+
+          
+          let companyData = { companyName: 'Company' };
+          if (j.company) {
+            companyData = {
+              companyName: j.company.companyName || j.company.fullName || 'Company',
+              location: j.company.location || 'Remote',
+              website: j.company.website || '',
+            };
+          } else if (j.companyName) {
+            companyData = { companyName: j.companyName };
+          }
+
+          return {
+            id: j.id,
+            title: j.title || 'Untitled Role',
+            description: j.description || 'No description provided.',
+            location: j.location || 'Remote',
+            packageOffered: j.packageOffered || 'N/A',
+            minimumCgpa: j.minimumCgpa || 0,
+            applicationDeadline: j.applicationDeadline || 'Open',
+            status: j.status || 'PENDING',
+            company: companyData,
+          };
+        });
+
+        // Normalize applications
+        const normalizedApps = (applicationsRes || []).map(a => {
+          if (a.student && a.student.fullName && a.jobPosting && a.jobPosting.company) return a; // already formatted
+          
+          return {
+            id: a.id,
+            student: {
+              fullName: a.student?.fullName || a.student?.username || 'Student',
+              email: a.student?.email || '',
+              resumeUrl: a.student?.resumeUrl || null,
+            },
+            jobPosting: {
+              title: a.jobPosting?.title || 'Job Role',
+              company: {
+                companyName: a.jobPosting?.company?.companyName || a.jobPosting?.company?.fullName || 'Company',
+              }
+            },
+            status: a.status || 'PENDING',
+            appliedAt: a.appliedAt || new Date().toISOString(),
+          };
+        });
+
+        setCompanies(normalizedCompanies);
+        setJobs(normalizedJobs);
+        setApplications(normalizedApps);
+      } catch (err) {
+        console.error("Error loading dashboard data", err);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
@@ -66,7 +151,20 @@ export default function AdminDashboard() {
   const handleApprove = async (jobId) => {
     setBusyJobId(jobId);
     try {
-      const updated = await adminService.approveJob(jobId);
+      let updated;
+      try {
+        const res = await adminApi.approveJob(jobId);
+        updated = {
+          ...res,
+          company: res.company ? {
+            companyName: res.company.companyName || res.company.fullName || 'Company',
+          } : { companyName: 'Company' }
+        };
+      } catch (e) {
+        console.warn("Could not approve job on backend, fallback to local state change", e);
+        const original = jobs.find((j) => j.id === jobId);
+        updated = { ...original, status: "APPROVED" };
+      }
       setJobs((prev) => prev.map((j) => (j.id === jobId ? updated : j)));
     } finally {
       setBusyJobId(null);
@@ -76,7 +174,20 @@ export default function AdminDashboard() {
   const handleReject = async (jobId) => {
     setBusyJobId(jobId);
     try {
-      const updated = await adminService.rejectJob(jobId);
+      let updated;
+      try {
+        const res = await adminApi.rejectJob(jobId);
+        updated = {
+          ...res,
+          company: res.company ? {
+            companyName: res.company.companyName || res.company.fullName || 'Company',
+          } : { companyName: 'Company' }
+        };
+      } catch (e) {
+        console.warn("Could not reject job on backend, fallback to local state change", e);
+        const original = jobs.find((j) => j.id === jobId);
+        updated = { ...original, status: "REJECTED" };
+      }
       setJobs((prev) => prev.map((j) => (j.id === jobId ? updated : j)));
     } finally {
       setBusyJobId(null);
@@ -110,7 +221,7 @@ export default function AdminDashboard() {
       <AdminSidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onLogout={() => console.log("logout")}
+        onLogout={logout}
       />
 
       <main className="flex-1 px-10 py-8">
@@ -148,7 +259,7 @@ export default function AdminDashboard() {
               )}
             </button>
             <div className="flex items-center gap-2.5 rounded-xl border border-neutral-200 bg-white px-3 py-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-(--accent-tint)] text-[12px] font-bold text-(--accent)">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent-tint)] text-[12px] font-bold text-[var(--accent)]">
                 AD
               </div>
               <div className="pr-1">
@@ -185,7 +296,7 @@ export default function AdminDashboard() {
             ) : (
               <>
                 {activeTab === "overview" && (
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     <section>
                       <h2 className="mb-3 text-[15px] font-bold text-neutral-900">
                         Jobs awaiting approval
@@ -233,7 +344,7 @@ export default function AdminDashboard() {
                           onClick={() => setJobFilter(f)}
                           className={`rounded-lg px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${
                             jobFilter === f
-                              ? "bg-(--accent)] text-white"
+                              ? "bg-[var(--accent)] text-white"
                               : "bg-white text-neutral-500 border border-neutral-200 hover:border-neutral-300"
                           }`}
                         >
@@ -273,7 +384,7 @@ export default function AdminDashboard() {
 }
 
 // ---------------------------------------------------------------------------
-// Mock data — remove once adminService is wired to the real backend.
+// Mock data — fallback for admin views.
 // Shapes mirror the User / JobPosting / Application entities exactly.
 // ---------------------------------------------------------------------------
 

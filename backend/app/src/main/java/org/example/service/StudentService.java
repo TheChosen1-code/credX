@@ -47,4 +47,33 @@ public class StudentService {
 
         return resumeUrl;
     }
-}
+
+    public User getProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User updateProfile(User profileData) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (profileData.getFullName() != null) {
+            user.setFullName(profileData.getFullName());
+        }
+        if (profileData.getBranch() != null) {
+            user.setBranch(profileData.getBranch());
+        }
+        if (profileData.getBatchYear() != null) {
+            user.setBatchYear(profileData.getBatchYear());
+        }
+        if (profileData.getResumeUrl() != null) {
+            user.setResumeUrl(profileData.getResumeUrl());
+        }
+
+        return userRepository.save(user);
+    }
+}
