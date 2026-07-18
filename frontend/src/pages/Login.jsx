@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
@@ -42,6 +44,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const auth = useAuth();
+  const navigate = useNavigate();
+
   const update = (key) => (e) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
 
@@ -58,17 +63,26 @@ export default function Login() {
     try {
       setLoading(true);
 
-      // await authService.login(form);
-
-      await new Promise((res) => setTimeout(res, 1000));
-
-      console.log(form);
+      const roleMap = {
+        ROLE_STUDENT: 'STUDENT',
+        ROLE_COMPANY: 'COMPANY_MANAGER',
+        ROLE_ADMIN: 'ADMIN',
+      };
+      const res = await auth.login({ username: form.email, password: form.password });
+      const rawRole = res?.role || localStorage.getItem('role');
+      const role = roleMap[rawRole] || rawRole;
+      if (!role) navigate('/select-role');
+      else if (role === 'STUDENT') navigate('/student-dashboard');
+      else if (role === 'COMPANY_MANAGER') navigate('/company-dashboard');
+      else if (role === 'ADMIN') navigate('/admin');
     } catch {
       setError("Invalid email or password.");
     } finally {
       setLoading(false);
     }
   };
+
+  // auth and navigate are imported below
 
   return (
     <div

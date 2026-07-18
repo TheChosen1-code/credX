@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check } from 'lucide-react';
 import Sidebar from '../components/student/Sidebar';
@@ -8,21 +8,40 @@ import JobCard from '../components/student/JobCard';
 import StatusBadge from '../components/student/StatusBadge';
 import EmptyState from '../components/student/EmptyState';
 import ProfileCard from '../components/student/ProfileCard';
-import { profile, matchedJobs, applications } from '../data/studentData';
+import { profile, matchedJobs as mockJobs, applications as mockApps } from '../data/studentData';
+import * as jobApi from '../api/jobApi';
+import * as applicationApi from '../api/applicationApi';
 import { formatDate } from '../utils';
 
 export default function StudentDashboard() {
   const [state, setState] = useState({
     activeTab: 'dashboard',
-    jobs: matchedJobs,
-    apps: applications,
+    jobs: mockJobs,
+    apps: mockApps,
     saved: [],
     selectedJob: null,
     toast: null,
-    sidebarOpen: false
+    sidebarOpen: false,
+    loading: true,
   });
 
   const { activeTab, jobs, apps, saved, selectedJob, toast, sidebarOpen } = state;
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const [jobsRes, appsRes] = await Promise.all([jobApi.getRecommended(), applicationApi.getMyApplications()]);
+        if (!mounted) return;
+        setState(s => ({ ...s, jobs: jobsRes || mockJobs, apps: appsRes || mockApps, loading: false }));
+      } catch (e) {
+        console.warn('API fetch failed, using mock data', e);
+        if (!mounted) return;
+        setState(s => ({ ...s, jobs: mockJobs, apps: mockApps, loading: false }));
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   // Toast notification
   const showToast = (message, type = 'success') => {
@@ -34,22 +53,22 @@ export default function StudentDashboard() {
   const isApplied = (job) => apps.some(a => a.company === job.company && a.title === job.title);
 
   // Handle job application
-  const handleApply = (job) => {
+  const handleApply = async (job) => {
     if (isApplied(job)) {
       showToast('You have already applied to this job!', 'warning');
       return;
     }
-
-    const newApp = {
-      id: Date.now(),
-      company: job.company,
-      title: job.title,
-      date: new Date().toISOString(),
-      status: 'Applied'
-    };
-
-    setState(s => ({ ...s, apps: [newApp, ...s.apps], selectedJob: null }));
-    showToast(`Successfully applied to ${job.title} at ${job.company}!`);
+    try {
+      const res = await applicationApi.applyToJob(job.id);
+      const newApp = res || { id: Date.now(), company: job.company, title: job.title, date: new Date().toISOString(), status: 'Applied' };
+      setState(s => ({ ...s, apps: [newApp, ...s.apps], selectedJob: null }));
+      showToast(`Successfully applied to ${job.title} at ${job.company}!`);
+    } catch (e) {
+      // fallback to mock update
+      const newApp = { id: Date.now(), company: job.company, title: job.title, date: new Date().toISOString(), status: 'Applied' };
+      setState(s => ({ ...s, apps: [newApp, ...s.apps], selectedJob: null }));
+      showToast(`Applied locally to ${job.title} (offline)`);
+    }
   };
 
   // Handle save/unsave job

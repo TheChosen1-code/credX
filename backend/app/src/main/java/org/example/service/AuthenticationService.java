@@ -88,7 +88,7 @@ public class AuthenticationService {
                 .createRefreshToken(user.getUsername())
                 .getToken();
 
-        return new JwtResponse(accessToken, refreshToken);
+        return new JwtResponse(accessToken, refreshToken, user.getRole().name());
     }
 
     public JwtResponse login(LoginRequest request) {
@@ -106,7 +106,10 @@ public class AuthenticationService {
                 .createRefreshToken(request.getUsername())
                 .getToken();
 
-        return new JwtResponse(accessToken, refreshToken);
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new JwtResponse(accessToken, refreshToken, user.getRole().name());
     }
 
     public JwtResponse refreshToken(String requestToken) {

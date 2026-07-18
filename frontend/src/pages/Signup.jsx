@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap,
@@ -103,6 +105,8 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   const isStudent = form.role === "STUDENT";
   const isCompany = form.role === "COMPANY_MANAGER";
@@ -148,14 +152,17 @@ export default function Signup() {
 
     setSubmitting(true);
     try {
-      // Build the payload your service layer expects. Only the fields
-      // relevant to the selected role are included.
+      const roleMap = {
+        STUDENT: 'ROLE_STUDENT',
+        COMPANY_MANAGER: 'ROLE_COMPANY',
+        ADMIN: 'ROLE_ADMIN',
+      };
       const payload = {
         username: form.username,
         password: form.password,
         fullName: form.fullName,
         email: form.email,
-        role: form.role,
+        role: roleMap[form.role] || 'ROLE_STUDENT',
         ...(isStudent && { branch: form.branch, batchYear: Number(form.batchYear) }),
         ...(needsInvitationKey && { invitationKey: form.invitationKey }),
         ...(isCompany && {
@@ -164,11 +171,14 @@ export default function Signup() {
           location: form.location,
         }),
       };
-
-      // Replace with your actual auth service call, e.g.
-      // await authService.signup(payload);
-      await new Promise((res) => setTimeout(res, 900));
-      console.log("Signup payload:", payload);
+      if (auth && auth.signup) {
+        const res = await auth.signup(payload);
+        const role = res?.role || localStorage.getItem('role');
+        if (!role) navigate('/select-role');
+        else if (role === 'ROLE_STUDENT') navigate('/student-dashboard');
+        else if (role === 'ROLE_COMPANY') navigate('/company-dashboard');
+        else if (role === 'ROLE_ADMIN') navigate('/admin');
+      }
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
