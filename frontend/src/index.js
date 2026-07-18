@@ -1,9 +1,11 @@
 import Signup from "./pages/Signup";
 import Login from './pages/Login'
 import CompanyDashboard from './pages/CompanyDashboard'
+import StudentDashboard from './pages/StudentDashboard'
 
 export default {
     Signup,
     Login,
-    CompanyDashboard
+    CompanyDashboard,
+    StudentDashboard,
 }
