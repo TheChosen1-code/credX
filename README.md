@@ -15,6 +15,7 @@ CredX is a campus placement portal that connects **students**, **companies**, an
 - [API Reference](#api-reference)
 - [Frontend Structure](#frontend-structure)
 - [Getting Started](#getting-started)
+- [Job Recommendation](#job-recommendation)
 - [Environment Variables](#environment-variables)
 - [Roadmap](#roadmap)
 
@@ -298,6 +299,14 @@ Signup dynamically shows/hides fields based on the selected role:
 npm install
 npm run dev
 ```
+
+---
+
+---
+
+## Job Recommendation
+
+Our AI pipeline uses a Sentence Transformer to generate semantic embeddings for both the student's skills and the job's required skills, then computes cosine similarity to identify matching skills. It returns a match score along with matched and missing skills, which the Spring Boot backend uses to rank all approved jobs and recommend the most relevant opportunities.
 
 ---
 
