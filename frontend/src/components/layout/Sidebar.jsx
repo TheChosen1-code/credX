@@ -3,22 +3,24 @@ import { BriefcaseBusiness, Home, LogOut, Settings, Sparkles, Users, X } from 'l
 import { motion, AnimatePresence } from 'framer-motion';
 
 const links = [
-  { name: 'Dashboard', icon: Home, active: true },
+  { name: 'Dashboard', icon: Home },
   { name: 'My Jobs', icon: BriefcaseBusiness },
   { name: 'Matches', icon: Users },
   { name: 'Settings', icon: Settings },
   { name: 'Logout', icon: LogOut }
 ];
 
-const Sidebar = ({ mobileOpen, onClose }) => {
+const Sidebar = ({ activeItem, onSelect, mobileOpen, onClose }) => {
   const renderNav = () => (
     <nav className="space-y-2">
       {links.map((link) => {
         const Icon = link.icon;
-        const active = link.active;
+        const active = link.name === activeItem;
         return (
           <button
             key={link.name}
+            type="button"
+            onClick={() => onSelect(link.name)}
             className={`flex w-full items-center gap-3 rounded-xl border-l-4 px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${active ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
           >
             <Icon className="h-4 w-4" />
@@ -78,6 +80,8 @@ const Sidebar = ({ mobileOpen, onClose }) => {
 };
 
 Sidebar.propTypes = {
+  activeItem: PropTypes.string.isRequired,
+  onSelect: PropTypes.func.isRequired,
   mobileOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired
 };

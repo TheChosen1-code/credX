@@ -64,8 +64,8 @@ const CreateJobModal = ({ isOpen, onClose, onCreate }) => {
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">Job Title</label>
-            <input name="title" value={form.title} onChange={handleChange} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.title ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} placeholder="Senior Product Designer" />
+            <label htmlFor="job-title" className="mb-2 block text-sm font-medium text-gray-700">Job Title</label>
+            <input id="job-title" name="title" value={form.title} onChange={handleChange} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.title ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} placeholder="Senior Product Designer" />
             {errors.title ? <p className="mt-1 text-sm text-red-500">{errors.title}</p> : null}
           </div>
           <div>
@@ -81,8 +81,8 @@ const CreateJobModal = ({ isOpen, onClose, onCreate }) => {
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">Location</label>
-            <input name="location" value={form.location} onChange={handleChange} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.location ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} placeholder="Remote / Bangalore" />
+            <label htmlFor="job-location" className="mb-2 block text-sm font-medium text-gray-700">Location</label>
+            <input id="job-location" name="location" value={form.location} onChange={handleChange} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.location ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} placeholder="Remote / Bangalore" />
             {errors.location ? <p className="mt-1 text-sm text-red-500">{errors.location}</p> : null}
           </div>
           <div>
@@ -134,14 +134,14 @@ const CreateJobModal = ({ isOpen, onClose, onCreate }) => {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">Job Description</label>
-          <textarea name="description" value={form.description} onChange={handleChange} rows={5} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.description ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} placeholder="Describe the role, responsibilities, and what you are looking for." />
+          <label htmlFor="job-description" className="mb-2 block text-sm font-medium text-gray-700">Job Description</label>
+          <textarea id="job-description" name="description" value={form.description} onChange={handleChange} rows={5} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.description ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} placeholder="Describe the role, responsibilities, and what you are looking for." />
           {errors.description ? <p className="mt-1 text-sm text-red-500">{errors.description}</p> : null}
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">Application Deadline</label>
-          <input type="date" name="deadline" value={form.deadline} onChange={handleChange} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.deadline ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} />
+          <label htmlFor="deadline" className="mb-2 block text-sm font-medium text-gray-700">Application Deadline</label>
+          <input id="deadline" type="date" name="deadline" value={form.deadline} onChange={handleChange} className={`w-full rounded-xl border px-3 py-2.5 outline-none transition ${errors.deadline ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'}`} />
           {errors.deadline ? <p className="mt-1 text-sm text-red-500">{errors.deadline}</p> : null}
         </div>
 
