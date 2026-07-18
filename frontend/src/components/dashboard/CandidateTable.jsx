@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { memo } from 'react';
 import Avatar from '../common/Avatar';
 import Badge from '../common/Badge';
@@ -27,7 +27,7 @@ const getStatusTone = (status) => {
   }
 };
 
-const CandidateTable = memo(({ candidates }) => {
+const CandidateTable = memo(({ candidates, onViewProfile }) => {
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="overflow-x-auto">
@@ -87,7 +87,7 @@ const CandidateTable = memo(({ candidates }) => {
                   <Badge variant={getStatusTone(candidate.status)}>{candidate.status}</Badge>
                 </td>
                 <td className="px-6 py-4">
-                  <Button variant="ghost" size="sm" icon={Sparkles} className="text-blue-600 hover:bg-blue-50">
+                  <Button variant="ghost" size="sm" icon={Sparkles} className="text-blue-600 hover:bg-blue-50" onClick={() => onViewProfile(candidate)} aria-label={`View profile for ${candidate.name}`}>
                     View Profile
                   </Button>
                 </td>
@@ -113,7 +113,8 @@ CandidateTable.propTypes = {
       matchedOn: PropTypes.string.isRequired,
       status: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  onViewProfile: PropTypes.func.isRequired
 };
 
 CandidateTable.displayName = 'CandidateTable';

@@ -1,16 +1,20 @@
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { Briefcase, MapPin, PencilLine, Trash2, Users } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
 
-const JobCard = memo(({ job, onViewMatches }) => {
+const JobCard = memo(({ job, onViewMatches, onEdit, onDelete }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <motion.article
       whileHover={{ scale: 1.01, y: -2 }}
       transition={{ duration: 0.2 }}
       className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -54,9 +58,15 @@ const JobCard = memo(({ job, onViewMatches }) => {
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" icon={PencilLine}>Edit</Button>
-        <Button variant="ghost" size="sm" icon={Trash2} className="text-red-600 hover:bg-red-50">Delete</Button>
-        <Button variant="primary" size="sm" icon={Users} onClick={() => onViewMatches(job.title)}>View Matches</Button>
+        <Button variant="outline" size="sm" icon={PencilLine} onClick={() => onEdit(job)} aria-label={`Edit ${job.title}`}>
+          Edit
+        </Button>
+        <Button variant="ghost" size="sm" icon={Trash2} className="text-red-600 hover:bg-red-50" onClick={() => onDelete(job.id)} aria-label={`Delete ${job.title}`}>
+          Delete
+        </Button>
+        <Button variant="primary" size="sm" icon={Users} onClick={() => onViewMatches(job.title)} aria-label={`View matches for ${job.title}`}>
+          {isHovered ? 'Open Matches' : 'View Matches'}
+        </Button>
       </div>
     </motion.article>
   );
@@ -75,7 +85,9 @@ JobCard.propTypes = {
     description: PropTypes.string.isRequired,
     skills: PropTypes.arrayOf(PropTypes.string).isRequired
   }).isRequired,
-  onViewMatches: PropTypes.func.isRequired
+  onViewMatches: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 JobCard.displayName = 'JobCard';
