@@ -5,7 +5,7 @@ CredX is a campus placement portal that connects **students**, **companies**, an
 ---
 
 ## Table of Contents
-
+- [Demo Video](#video-link)
 - [Overview](#overview)
 - [Tech Stack](#tech-stack)
 - [User Roles](#user-roles)
@@ -19,6 +19,9 @@ CredX is a campus placement portal that connects **students**, **companies**, an
 - [Roadmap](#roadmap)
 
 ---
+## Video-link
+
+[▶ Watch Demo Video](https://youtu.be/xgEvPGZ4Yuw)
 
 ## Overview
 
